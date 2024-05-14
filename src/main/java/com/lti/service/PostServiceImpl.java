@@ -32,19 +32,17 @@ public class PostServiceImpl implements PostService {
 	@Autowired
 	private CategoryRepo cRepo;
 
+	@Autowired
+	private UserService userService;
+
 	@Override
 	public PostDto createPost(PostDto postDto,Integer userId,Integer categoryId) {
 
-		User user = userRepo.findById(userId).orElseThrow(()->new ResourceNotFoundException("There exists no such user with id"+userId));
+		User user = userRepo.findById(userService.getLoggedInUser().getId()).orElseThrow(()->new ResourceNotFoundException("There exists no such user with id"+userId));
 
 		Category category = cRepo.findById(categoryId).orElseThrow(()->new ResourceNotFoundException("There exists no such category with id"+categoryId));
 
 		Post post = this.modelMapper.map(postDto, Post.class);
-
-		post.setImageName("default.png");
-		post.setAddedDate(new Date());
-		post.setUser(user);
-		post.setCategory(category);
 
 		Post newPost = pRepo.save(post);
 

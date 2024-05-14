@@ -16,17 +16,17 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name="Users")
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class User implements UserDetails {
 	
 	@Id
@@ -43,8 +43,8 @@ public class User implements UserDetails {
 	private String email;
 	
 	@Column
-	@NotEmpty
-	@Size(min=3,max=10,message = "Password must have min of 3 characters and max of 10 characters")
+	//@NotEmpty
+	//@Size(min=3,max=10,message = "Password must have min of 3 characters and max of 10 characters")
 	private String password;
 	
 	@Column
@@ -60,26 +60,26 @@ public class User implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return null;
+		return this.email;
 	}
 
 	@Override
 	public boolean isAccountNonExpired() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return false;
+		return true;
 	}
 }

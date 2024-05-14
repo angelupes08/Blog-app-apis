@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.lti.payloads.ErrorObject;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<ErrorObject> handleUserNotFoundException(ResourceNotFoundException e){
@@ -26,6 +27,18 @@ public class GlobalExceptionHandler {
 		err.setTimeStamp(new Date());
 		
 		return new ResponseEntity<ErrorObject>(err,HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler(ItemAlreadyExistsException.class)
+	public ResponseEntity<ErrorObject> handleItemAlreadyExistsException(ItemAlreadyExistsException e){
+
+		ErrorObject err= new ErrorObject();
+
+		err.setMessage(e.getMessage());
+		err.setStatusCode(HttpStatus.CONFLICT.value());
+		err.setTimeStamp(new Date());
+
+		return new ResponseEntity<ErrorObject>(err,HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)

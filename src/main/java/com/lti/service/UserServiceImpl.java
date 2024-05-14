@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.lti.exceptions.ItemAlreadyExistsException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.lti.dao.UserRepo;
@@ -24,13 +27,22 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	ModelMapper modelMapper;
 
+	@Autowired
+	PasswordEncoder passwordEncoder;
+
 	@Override
 	public UserDto createUser(UserDto userDto) {
+
+		Optional<User> opt = userRepo.findByEmail(userDto.getEmail());
+
+		if(opt.isPresent()){
+			throw new ItemAlreadyExistsException("An account already exists with given email"+userDto.getEmail());
+		}
+
+		User newUser = this.modelMapper.map(userDto,User.class);
+		newUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
 		
-		User user = DtotoUser(userDto);
-		User savedUser = userRepo.save(user);
-		
-		return usertoDto(savedUser);
+		return usertoDto(userRepo.save(newUser));
 	}
 
 	@Override
@@ -105,29 +117,28 @@ public class UserServiceImpl implements UserService {
 		
 		userRepo.delete(user);
 	}
-	
+
+	@Override
+	public User getLoggedInUser() {
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		String email = authentication.getName();
+
+		return userRepo.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found for the email"+email));
+	}
+
 	public User DtotoUser(UserDto userDto) {
 		
 		User user = this.modelMapper.map(userDto, User.class);
-		
-//		user.setName(userDto.getName());
-//		user.setEmail(userDto.getEmail());
-//		user.setPassword(userDto.getPassword());
-//		user.setAbout(userDto.getAbout());
-		
+
 		return user;
 	}
 	
 	public UserDto usertoDto(User user) {
 		
 		UserDto userDto = this.modelMapper.map(user, UserDto.class);
-		
-//		userDto.setId(user.getId());
-//		userDto.setName(user.getName());
-//		userDto.setEmail(user.getEmail());
-//		userDto.setPassword(user.getPassword());
-//		userDto.setAbout(user.getAbout());
-		
+
 		return userDto;
 	}
 
