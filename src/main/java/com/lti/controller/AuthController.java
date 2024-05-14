@@ -1,10 +1,12 @@
 package com.lti.controller;
 
+
 import com.lti.payloads.JwtRequest;
 import com.lti.payloads.JwtResponse;
 import com.lti.payloads.UserDto;
 import com.lti.security.JwtHelper;
 import com.lti.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,14 +25,13 @@ public class AuthController {
     private UserDetailsService userDetailsService;
 
     @Autowired
-    private AuthenticationManager manager;
-
-
-    @Autowired
     private JwtHelper helper;
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    AuthenticationManager manager;
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest request) {
@@ -65,9 +66,11 @@ public class AuthController {
         return "Credentials Invalid !!";
     }
 
-    @PostMapping("/create")
-    public UserDto createUser(@RequestBody UserDto user){
+    @PostMapping("/user")//this will create a user
+    public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserDto user) {
 
-        return userService.createUser(user);
+        UserDto u = userService.createUser(user);
+
+        return new ResponseEntity<>(u,HttpStatus.CREATED);
     }
 }

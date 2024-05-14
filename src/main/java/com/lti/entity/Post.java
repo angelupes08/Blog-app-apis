@@ -2,7 +2,6 @@ package com.lti.entity;
 
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.*;
@@ -10,9 +9,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+@Data
 @Entity
-@Getter
-@Setter
 public class Post {
 	
 	@Id

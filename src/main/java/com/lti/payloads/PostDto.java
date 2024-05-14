@@ -5,10 +5,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.lti.entity.Comment;
 import lombok.Data;
 
-@Data
+
 public class PostDto {
 	
 	private String title;
@@ -23,7 +22,7 @@ public class PostDto {
 	
 	private UserDto user;
 
-	private Set<CommentDto> comments;
+	//private Set<CommentDto> comments;
 	
 
 }
