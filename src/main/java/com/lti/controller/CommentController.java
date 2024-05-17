@@ -12,7 +12,7 @@ public class CommentController {
     @Autowired
     CommentService commentService;
 
-    @PostMapping("/create/post/{postId}")
+    @PostMapping("/user/post/{postId}")
     public CommentDto createComment(@RequestBody CommentDto commentDto, @PathVariable Integer postId){
 
         return commentService.createComment(commentDto,postId);

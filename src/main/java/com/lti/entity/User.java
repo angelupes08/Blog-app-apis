@@ -43,8 +43,7 @@ public class User implements UserDetails {
 	private String email;
 	
 	@Column
-	//@NotEmpty
-	//@Size(min=3,max=10,message = "Password must have min of 3 characters and max of 10 characters")
+	@NotEmpty
 	private String password;
 	
 	@Column
@@ -52,6 +51,9 @@ public class User implements UserDetails {
 	
 	@OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch=FetchType.LAZY) 
 	private List<Post> posts;
+
+	@OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	private List<Comment> comments;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

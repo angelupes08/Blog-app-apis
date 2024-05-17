@@ -6,6 +6,10 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.lti.dao.CategoryRepo;
@@ -36,13 +40,16 @@ public class PostServiceImpl implements PostService {
 	private UserService userService;
 
 	@Override
-	public PostDto createPost(PostDto postDto,Integer userId,Integer categoryId) {
+	public PostDto createPost(PostDto postDto,Integer categoryId) {
 
-		User user = userRepo.findById(userService.getLoggedInUser().getId()).orElseThrow(()->new ResourceNotFoundException("There exists no such user with id"+userId));
+		User user = userRepo.findById(userService.getLoggedInUser().getId()).orElseThrow(()->new ResourceNotFoundException("There exists no such user with id"));
 
 		Category category = cRepo.findById(categoryId).orElseThrow(()->new ResourceNotFoundException("There exists no such category with id"+categoryId));
 
 		Post post = this.modelMapper.map(postDto, Post.class);
+
+		post.setUser(user);
+		post.setCategory(category);
 
 		Post newPost = pRepo.save(post);
 
@@ -56,14 +63,32 @@ public class PostServiceImpl implements PostService {
 		
 		List<Post> posts = pRepo.findByUser(user);
 		
-		List<PostDto> p = new ArrayList<>();
+		List<PostDto> p = new ArrayList<PostDto>();
 		
 		for(int i=0;i<posts.size();i++) {
-			
+
 			p.add(this.modelMapper.map(posts.get(i), PostDto.class));
 		}
 
 		
+		return p;
+	}
+
+	@Override
+	public List<PostDto> getPostsByUser() {
+
+		User user = userRepo.findById(userService.getLoggedInUser().getId()).orElseThrow(()->new ResourceNotFoundException("There exists no such user with id"+userService.getLoggedInUser().getEmail()));
+
+		List<Post> posts = pRepo.findByUser(user);
+
+		List<PostDto> p = new ArrayList<>();
+
+		for(int i=0;i<posts.size();i++) {
+
+			p.add(this.modelMapper.map(posts.get(i), PostDto.class));
+		}
+
+
 		return p;
 	}
 
@@ -92,6 +117,14 @@ public class PostServiceImpl implements PostService {
 
 
 		return this.modelMapper.map(post,PostDto.class);
+	}
+
+	@Override
+	public List<PostDto> findAllPosts(Integer pageNo,Integer pageSize) {
+
+		Page<Post> page = pRepo.findAll(PageRequest.of(pageNo,pageSize,Sort.Direction.DESC,"id"));
+
+		return page.stream().map((element) -> modelMapper.map(element, PostDto.class)).toList();
 	}
 
 }

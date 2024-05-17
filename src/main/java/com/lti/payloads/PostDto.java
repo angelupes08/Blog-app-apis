@@ -7,7 +7,7 @@ import java.util.Set;
 
 import lombok.Data;
 
-
+@Data
 public class PostDto {
 	
 	private String title;
@@ -22,7 +22,7 @@ public class PostDto {
 	
 	private UserDto user;
 
-	//private Set<CommentDto> comments;
+	private Set<CommentDto> comments;
 	
 
 }

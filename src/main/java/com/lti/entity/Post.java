@@ -17,14 +17,16 @@ public class Post {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@Column(nullable = false)
+	@Column
 	private String title;
 	
 	@Column
 	private String content;
-	
+
+	@Column
 	private String imageName;
-	
+
+	@Column
 	private Date addedDate;
 	
 	@ManyToOne

@@ -1,5 +1,6 @@
 package com.lti.config;
 
+
 import com.lti.security.JwtAuthenticationEntryPoint;
 import com.lti.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Autowired
-    private JwtAuthenticationEntryPoint point;
+    JwtAuthenticationEntryPoint point;
 
     @Autowired
-    private JwtAuthenticationFilter filter;
+    JwtAuthenticationFilter filter;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -40,8 +41,7 @@ public class SecurityConfig {
                                 auth.requestMatchers("/post/**")
                                         .authenticated().
                                         requestMatchers("/auth/**").permitAll()
-                                        //.requestMatchers("auth/user").permitAll()
-                                        //.requestMatchers("/comments/**").authenticated()
+                                        .requestMatchers("/comments/**").authenticated()
                                         .requestMatchers("/category").permitAll()
                                         .anyRequest()
                                         .authenticated())

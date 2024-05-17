@@ -34,10 +34,10 @@ public class UserController {
 	}
 
 	
-	@PutMapping("/updateuser/{id}")
-	public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto,@PathVariable int id) {
+	@PutMapping("/updateuser")
+	public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto) {
 		
-		UserDto u = uService.updateUser(userDto, id);
+		UserDto u = uService.updateUser(userDto);
 		 
 		return new ResponseEntity<>(u,HttpStatus.OK);
 	}
@@ -58,12 +58,12 @@ public class UserController {
 		return new ResponseEntity<>(u,HttpStatus.OK);
 	}
 	
-	@DeleteMapping("deleteuser/{id}")
-	public String deleteUser(@PathVariable int id) {
+	@DeleteMapping("deleteuser")
+	public String deleteUser() {
 		
-		uService.deleteUser(id);
+		uService.deleteUser();
 		
-		return "The user with id: "+id+ " has been deleted";
+		return "The user has been deleted";
 	}
 
 }

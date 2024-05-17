@@ -3,15 +3,20 @@ package com.lti.service;
 import java.util.List;
 
 import com.lti.payloads.PostDto;
+import org.springframework.data.domain.Pageable;
 
 public interface PostService {
 	
-	public PostDto createPost(PostDto postDto,Integer userId,Integer categoryId);
+	public PostDto createPost(PostDto postDto,Integer categoryId);
 	
 	public List<PostDto> getPostsByUser(Integer userId);
+
+	public List<PostDto> getPostsByUser();
 	
 	public List<PostDto> getPostsByCategory(Integer categoryId);
 
 	public PostDto getPostsById(Integer postId);
+
+	public List<PostDto> findAllPosts(Integer pageNo,Integer pageSize);
 
 }

@@ -2,15 +2,13 @@ package com.lti.controller;
 
 import java.util.List;
 
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.lti.payloads.PostDto;
 import com.lti.service.PostService;
@@ -22,23 +20,28 @@ public class PostController {
 	@Autowired
 	PostService pService;
 	
-	@PostMapping("/user/{userId}/category/{categoryId}")
+	@PostMapping("/user/category/{categoryId}")
 	public ResponseEntity<PostDto> createPost(
 			@RequestBody PostDto postDto,
-			@PathVariable Integer userId,
 			@PathVariable Integer categoryId
 			){
 				
-		PostDto pDto = pService.createPost(postDto, userId, categoryId);
+		PostDto pDto = pService.createPost(postDto, categoryId);
 		return new ResponseEntity<PostDto>(pDto,HttpStatus.CREATED);
 		
 		
 	}
 	
 	@GetMapping("/user/{userId}")
-	public ResponseEntity<List<PostDto>> getPostsByUser(@PathVariable int userId){
+	public ResponseEntity<List<PostDto>> getPostsByUser(Integer userId){
 		
 		return new ResponseEntity<List<PostDto>>(pService.getPostsByUser(userId),HttpStatus.OK);
+	}
+
+	@GetMapping("/user")
+	public ResponseEntity<List<PostDto>> getPostsOfUser(){
+
+		return new ResponseEntity<List<PostDto>>(pService.getPostsByUser(),HttpStatus.OK);
 	}
 	
 	@GetMapping("/category/{categoryId}")
@@ -51,6 +54,14 @@ public class PostController {
 	public ResponseEntity<PostDto> getPostsById(@PathVariable int postId){
 
 		return new ResponseEntity<>(pService.getPostsById(postId),HttpStatus.OK);
+	}
+
+	@GetMapping("")
+	public ResponseEntity<List<PostDto>> findAllPosts(
+			@RequestParam(value = "pageNo",required = false,defaultValue = "0") Integer pageNo,
+			@RequestParam(value = "pageSize",required = false,defaultValue = "20") Integer pageSize){
+
+		return new ResponseEntity<>(pService.findAllPosts(pageNo,pageSize),HttpStatus.OK);
 	}
 
 }

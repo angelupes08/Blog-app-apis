@@ -14,8 +14,8 @@ public interface UserService {
 	UserDto createUser(UserDto userDto);
 	List<UserDto> getAllUsers();
 	UserDto getUserById(int id);
-	UserDto updateUser(UserDto user,int id);
-	void deleteUser(int id);
+	UserDto updateUser(UserDto user);
+	void deleteUser();
 	User getLoggedInUser();
 
 }

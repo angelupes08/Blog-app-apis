@@ -78,18 +78,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDto updateUser(UserDto userDto, int id) {
+	public UserDto updateUser(UserDto userDto) {
 		
-		Optional<User> opt = userRepo.findById(id);
-		
-		User user = new User();
-		
-		if(opt.isPresent()) {
-			user = opt.get();
-		}
-		else {
-			throw new ResourceNotFoundException("There exists no such user with id: "+id);
-		}
+		User user = userRepo.findById(getLoggedInUser().getId()).orElseThrow(()->new ResourceNotFoundException("There exists no such user"));
 		
 		user.setName(userDto.getName());
 		user.setEmail(userDto.getEmail());
@@ -102,19 +93,10 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void deleteUser(int id) {
-		
-		Optional<User> opt = userRepo.findById(id);
-		
-		User user = new User();
-		
-		if(opt.isPresent()) {
-			user = opt.get();
-		}
-		else {
-			throw new ResourceNotFoundException("There exists no such user with id: "+id);
-		}
-		
+	public void deleteUser() {
+
+		User user = userRepo.findById(getLoggedInUser().getId()).orElseThrow(()->new ResourceNotFoundException("There exists no such user"));
+
 		userRepo.delete(user);
 	}
 
