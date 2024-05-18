@@ -19,6 +19,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
 
+    private static final String[] WHITE_LIST_URL = { "/api/v1/auth/**", "/v2/api-docs", "/v3/api-docs",
+            "/v3/api-docs/**", "/swagger-resources", "/swagger-resources/**", "/configuration/ui",
+            "/configuration/security", "/swagger-ui/**", "/webjars/**", "/swagger-ui.html", "/api/auth/**",
+            "/api/test/**", "/authenticate" };
+
     @Autowired
     JwtAuthenticationEntryPoint point;
 
@@ -43,6 +48,7 @@ public class SecurityConfig {
                                         requestMatchers("/auth/**").permitAll()
                                         .requestMatchers("/comments/**").authenticated()
                                         .requestMatchers("/category").permitAll()
+                                        .requestMatchers(WHITE_LIST_URL).permitAll()
                                         .anyRequest()
                                         .authenticated())
                 .exceptionHandling(ex->ex.authenticationEntryPoint(point))

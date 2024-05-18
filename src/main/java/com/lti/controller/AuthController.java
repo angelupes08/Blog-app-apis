@@ -6,6 +6,8 @@ import com.lti.payloads.JwtResponse;
 import com.lti.payloads.UserDto;
 import com.lti.security.JwtHelper;
 import com.lti.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,6 +35,7 @@ public class AuthController {
     @Autowired
     AuthenticationManager manager;
 
+    @Operation(summary = "Login to the API")
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest request) {
 
@@ -66,6 +69,7 @@ public class AuthController {
         return "Credentials Invalid !!";
     }
 
+    @Operation(summary = "Register to the app")
     @PostMapping("/user")//this will create a user
     public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserDto user) {
 
