@@ -57,6 +57,25 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
+	public PostDto updatePost(PostDto postDto,Integer postId){
+
+		//User user = userRepo.findById(userService.getLoggedInUser().getId()).orElseThrow(()->new ResourceNotFoundException("There exists no such user with id"));
+
+		Post existingPost = pRepo.findByIdAndUser(postId,userService.getLoggedInUser());
+
+		existingPost.setTitle(postDto.getTitle()!=null?postDto.getTitle(): existingPost.getTitle());
+
+		existingPost.setContent(postDto.getContent()!=null?postDto.getContent(): existingPost.getContent());
+
+		existingPost.setImageName(postDto.getImageName()!=null?postDto.getImageName():existingPost.getImageName());
+
+		pRepo.save(existingPost);
+
+		return modelMapper.map(existingPost,PostDto.class);
+
+	}
+
+	@Override
 	public List<PostDto> getPostsByUser(Integer userId) {
 		
 		User user = userRepo.findById(userId).orElseThrow(()->new ResourceNotFoundException("There exists no such user with id"+userId));
@@ -77,9 +96,9 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public List<PostDto> getPostsByUser() {
 
-		User user = userRepo.findById(userService.getLoggedInUser().getId()).orElseThrow(()->new ResourceNotFoundException("There exists no such user with id"+userService.getLoggedInUser().getEmail()));
+//		User user = userRepo.findById(userService.getLoggedInUser().getId()).orElseThrow(()->new ResourceNotFoundException("There exists no such user with id"+userService.getLoggedInUser().getEmail()));
 
-		List<Post> posts = pRepo.findByUser(user);
+		List<Post> posts = pRepo.findByUser(userService.getLoggedInUser());
 
 		List<PostDto> p = new ArrayList<>();
 
@@ -117,6 +136,14 @@ public class PostServiceImpl implements PostService {
 
 
 		return this.modelMapper.map(post,PostDto.class);
+	}
+
+	@Override
+	public List<PostDto> searchPostContaining(String keyword) {
+
+		List<Post> posts = pRepo.findByTitleContaining("%"+keyword+"%");
+
+		return posts.stream().map((post) -> modelMapper.map(post, PostDto.class)).toList();
 	}
 
 	@Override

@@ -1,10 +1,13 @@
 package com.lti.controller;
 
+import java.io.IOException;
 import java.util.List;
 
+import com.lti.service.FileService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.lti.payloads.PostDto;
 import com.lti.service.PostService;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/post")
@@ -20,6 +24,12 @@ public class PostController {
 	
 	@Autowired
 	PostService pService;
+
+	@Autowired
+	FileService fileService;
+
+	@Value("${project.image}")
+	private String path;
 
 	@Operation(summary = "Create a Post")
 	@PostMapping("/user/category/{categoryId}")
@@ -69,6 +79,30 @@ public class PostController {
 			@RequestParam(value = "pageSize",required = false,defaultValue = "20") Integer pageSize){
 
 		return new ResponseEntity<>(pService.findAllPosts(pageNo,pageSize),HttpStatus.OK);
+	}
+
+	//post image upload
+	@Operation(summary = "Upload images to posts")
+	@PostMapping("/image/upload/{postId}")
+	public ResponseEntity<PostDto> uploadPostImage(
+			@RequestParam("image")MultipartFile image,
+			@PathVariable Integer postId
+			) throws IOException {
+		String fileName = fileService.uploadImage(path,image);
+
+		PostDto postDto = pService.getPostsById(postId);
+		postDto.setImageName(fileName);
+
+		PostDto updatePost = pService.updatePost(postDto,postId);
+
+		return new ResponseEntity<PostDto>(updatePost,HttpStatus.OK);
+	}
+
+	@Operation(summary = "Search posts by title")
+	@GetMapping("/search/{keyword}")
+	public ResponseEntity<List<PostDto>> searchPosts(@PathVariable String keyword){
+
+		return new ResponseEntity<List<PostDto>>(pService.searchPostContaining(keyword),HttpStatus.OK);
 	}
 
 }

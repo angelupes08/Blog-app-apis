@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 public interface PostService {
 	
 	public PostDto createPost(PostDto postDto,Integer categoryId);
+
+	public PostDto updatePost(PostDto postDto,Integer postId);
 	
 	public List<PostDto> getPostsByUser(Integer userId);
 
@@ -16,6 +18,8 @@ public interface PostService {
 	public List<PostDto> getPostsByCategory(Integer categoryId);
 
 	public PostDto getPostsById(Integer postId);
+
+	public List<PostDto> searchPostContaining(String keyword);
 
 	public List<PostDto> findAllPosts(Integer pageNo,Integer pageSize);
 
