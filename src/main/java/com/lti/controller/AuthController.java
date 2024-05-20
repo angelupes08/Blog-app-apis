@@ -35,7 +35,7 @@ public class AuthController {
     @Autowired
     AuthenticationManager manager;
 
-    @Operation(summary = "Login to the API")
+    @Operation(summary = "Login to the app")
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest request) {
 
@@ -70,7 +70,7 @@ public class AuthController {
     }
 
     @Operation(summary = "Register to the app")
-    @PostMapping("/user")//this will create a user
+    @PostMapping("/register")//this will create a user
     public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserDto user) {
 
         UserDto u = userService.createUser(user);

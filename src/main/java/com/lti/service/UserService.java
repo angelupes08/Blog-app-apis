@@ -13,7 +13,7 @@ public interface UserService {
 	
 	UserDto createUser(UserDto userDto);
 	List<UserDto> getAllUsers();
-	UserDto getUserById(int id);
+	UserDto getUserDetails();
 	UserDto updateUser(UserDto user);
 	void deleteUser();
 	User getLoggedInUser();

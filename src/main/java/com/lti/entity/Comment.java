@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Entity
 @Getter
 @Setter
@@ -16,6 +18,12 @@ public class Comment {
 
     @Column
     private String content;
+
+    @Column
+    private Date createdDate;
+
+    @Column
+    private Date updatedDate;
 
     @ManyToOne
     @JoinColumn(name = "postId")

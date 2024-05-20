@@ -48,6 +48,11 @@ public class PostServiceImpl implements PostService {
 
 		Post post = this.modelMapper.map(postDto, Post.class);
 
+		post.setImageName("xyz");
+
+		post.setAddedDate(new Date());
+		post.setUpdatedDate(new Date());
+
 		post.setUser(user);
 		post.setCategory(category);
 
@@ -68,6 +73,8 @@ public class PostServiceImpl implements PostService {
 		existingPost.setContent(postDto.getContent()!=null?postDto.getContent(): existingPost.getContent());
 
 		existingPost.setImageName(postDto.getImageName()!=null?postDto.getImageName():existingPost.getImageName());
+
+		existingPost.setUpdatedDate(new Date());
 
 		pRepo.save(existingPost);
 

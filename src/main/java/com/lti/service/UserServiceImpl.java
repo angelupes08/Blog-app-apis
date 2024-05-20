@@ -1,6 +1,7 @@
 package com.lti.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +42,9 @@ public class UserServiceImpl implements UserService {
 
 		User newUser = this.modelMapper.map(userDto,User.class);
 		newUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
+
+		newUser.setCreatedDate(new Date());
+		newUser.setUpdatedDate(new Date());
 		
 		return usertoDto(userRepo.save(newUser));
 	}
@@ -61,18 +65,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDto getUserById(int id) {
+	public UserDto getUserDetails() {
 		
-		Optional<User> opt = userRepo.findById(id);
-		
-		User user = new User();
-		
-		if(opt.isPresent()) {
-			user = opt.get();
-		}
-		else {
-			throw new ResourceNotFoundException("There exists no such user with id: "+id);
-		}
+		User user = userRepo.findById(getLoggedInUser().getId()).orElseThrow(()->new ResourceNotFoundException("There exists no such user with userid"+getLoggedInUser().getEmail()));
 		
 		return usertoDto(user);
 	}
@@ -82,10 +77,11 @@ public class UserServiceImpl implements UserService {
 		
 		User user = userRepo.findById(getLoggedInUser().getId()).orElseThrow(()->new ResourceNotFoundException("There exists no such user"));
 		
-		user.setName(userDto.getName());
-		user.setEmail(userDto.getEmail());
-		user.setPassword(userDto.getPassword());
-		user.setAbout(userDto.getAbout());
+		user.setName(userDto.getName()!=null? userDto.getName() : user.getName());
+		user.setPassword(userDto.getPassword()!=null?passwordEncoder.encode(userDto.getPassword()):passwordEncoder.encode(user.getPassword()));
+		user.setAbout(userDto.getAbout()!=null?userDto.getAbout(): user.getAbout());
+
+		user.setUpdatedDate(new Date());
 		
 		User savedUser = userRepo.save(user);
 		

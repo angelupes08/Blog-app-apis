@@ -26,15 +26,6 @@ public class UserController {
 	@Autowired
 	UserService uService;
 
-	@Operation(summary = "Create users")
-	@PostMapping("/user")//User will be created
-	public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserDto userDto) {
-		
-		UserDto u = uService.createUser(userDto);
-		
-		return new ResponseEntity<>(u,HttpStatus.CREATED);
-	}
-
 	@Operation(summary = "Updates user details")
 	@PutMapping("/updateuser")
 	public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto) {
@@ -54,10 +45,10 @@ public class UserController {
 	}
 
 	@Operation(summary = "Get users by Id")
-	@GetMapping("user/{id}")
-	public ResponseEntity<UserDto> getUserById(@PathVariable int id){
+	@GetMapping("user")
+	public ResponseEntity<UserDto> getUserById(){
 		
-		UserDto u = uService.getUserById(id);
+		UserDto u = uService.getUserDetails();
 		
 		return new ResponseEntity<>(u,HttpStatus.OK);
 	}

@@ -2,6 +2,7 @@ package com.lti.entity;
 
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -48,6 +49,12 @@ public class User implements UserDetails {
 	
 	@Column
 	private String about;
+
+	@Column
+	private Date createdDate;
+
+	@Column
+	private Date updatedDate;
 	
 	@OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch=FetchType.LAZY) 
 	private List<Post> posts;

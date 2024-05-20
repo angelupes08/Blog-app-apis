@@ -28,6 +28,9 @@ public class Post {
 
 	@Column
 	private Date addedDate;
+
+	@Column
+	private Date updatedDate;
 	
 	@ManyToOne
 	@JoinColumn(name="categoryId")
