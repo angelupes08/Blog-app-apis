@@ -68,6 +68,10 @@ public class PostServiceImpl implements PostService {
 
 		Post existingPost = pRepo.findByIdAndUser(postId,userService.getLoggedInUser());
 
+		if(existingPost==null){
+			throw new ResourceNotFoundException("There exists no such post for the user");
+		}
+
 		existingPost.setTitle(postDto.getTitle()!=null?postDto.getTitle(): existingPost.getTitle());
 
 		existingPost.setContent(postDto.getContent()!=null?postDto.getContent(): existingPost.getContent());

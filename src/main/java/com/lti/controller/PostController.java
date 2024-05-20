@@ -44,6 +44,13 @@ public class PostController {
 		
 	}
 
+	@Operation(summary = "Update a post")
+	@PutMapping("/user/{postId}")
+	public ResponseEntity<PostDto> updatePost(@PathVariable Integer postId,@RequestBody PostDto postDto){
+
+		return new ResponseEntity<PostDto>(pService.updatePost(postDto,postId),HttpStatus.OK);
+	}
+
 	@Operation(summary = "See any user's posts")
 	@GetMapping("/user/{userId}")
 	public ResponseEntity<List<PostDto>> getPostsByUser(Integer userId){

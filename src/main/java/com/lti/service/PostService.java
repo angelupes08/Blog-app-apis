@@ -1,5 +1,6 @@
 package com.lti.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.lti.payloads.PostDto;
@@ -22,5 +23,6 @@ public interface PostService {
 	public List<PostDto> searchPostContaining(String keyword);
 
 	public List<PostDto> findAllPosts(Integer pageNo,Integer pageSize);
+
 
 }
