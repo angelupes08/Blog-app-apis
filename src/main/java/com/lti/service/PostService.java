@@ -24,5 +24,7 @@ public interface PostService {
 
 	public List<PostDto> findAllPosts(Integer pageNo,Integer pageSize);
 
+	public List<PostDto> findPostsBetweenDates(Date startDate, Date endDate);
+
 
 }

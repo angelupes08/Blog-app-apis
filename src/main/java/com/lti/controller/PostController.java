@@ -1,15 +1,14 @@
 package com.lti.controller;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import com.lti.service.FileService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -110,6 +109,15 @@ public class PostController {
 	public ResponseEntity<List<PostDto>> searchPosts(@PathVariable String keyword){
 
 		return new ResponseEntity<List<PostDto>>(pService.searchPostContaining(keyword),HttpStatus.OK);
+	}
+
+	@Operation(summary = "Search posts between dates")
+	@GetMapping("/searchdate")
+	public ResponseEntity<List<PostDto>> readPostsByDate(
+			@RequestParam(value = "startDate",required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date startDate,
+			@RequestParam(value = "endDate",required = false) @DateTimeFormat(pattern = "dd-MM-yyyy") Date endDate){
+
+		return new ResponseEntity<List<PostDto>>(pService.findPostsBetweenDates(startDate,endDate),HttpStatus.OK);
 	}
 
 }

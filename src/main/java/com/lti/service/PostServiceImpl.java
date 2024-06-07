@@ -165,4 +165,19 @@ public class PostServiceImpl implements PostService {
 		return page.stream().map((element) -> modelMapper.map(element, PostDto.class)).toList();
 	}
 
+	@Override
+	public List<PostDto> findPostsBetweenDates(Date startDate, Date endDate) {
+
+		if(startDate==null){
+			startDate = new Date(0);
+		}
+		if(endDate==null){
+			endDate = new Date(System.currentTimeMillis());
+		}
+
+		List<Post> posts = pRepo.findByAddedDateBetween(startDate, endDate);
+
+		return posts.stream().map((post) -> modelMapper.map(post, PostDto.class)).toList();
+	}
+
 }
